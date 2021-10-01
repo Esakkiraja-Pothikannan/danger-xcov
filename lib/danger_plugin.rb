@@ -156,7 +156,13 @@ module Danger
       puts"average_coverage_markdown_value::: #{name} -- #{displayable_coverage}"
       markdown = "## Current coverage for #{name} is `#{displayable_coverage}`\n"
       puts"average_coverage_markdown_value::: markdown -- #{markdown}"
-      markdown << "#{targets.map { |target| each_target_changed_files_markdown_value(target.files) }.join("")}\n> Powered by [xcov](https://github.com/nakiostudio/xcov)"
+      changed_files_markdown = "#{targets.map { |target| each_target_changed_files_markdown_value(target.files) }.join("")}"
+      if changed_files_markdown.length > 0
+        markdown << "#{changed_files_markdown}"
+      else
+        markdown << "✅ *No files affecting coverage found*\n\n---\n"
+      end
+      markdown <<  "\n> Powered by [xcov](https://github.com/nakiostudio/xcov)"
       puts"average_coverage_markdown_value::: markdown111 -- #{markdown}"
       
       markdown
@@ -165,7 +171,7 @@ module Danger
     def each_target_changed_files_markdown_value(files)
       puts "each_target_changed_files_markdown_value"
       markdown = ""
-      return markdown << "✅ *No files affecting coverage found*\n\n---\n" if files.empty?
+      return markdown if files.empty?
       puts "each_target_changed_files_markdown_value -- 1111"
       markdown << "Files changed | - | - \n--- | --- | ---\n"
       puts "each_target_changed_files_markdown_value:: FILES CHANGED:: #{markdown}"
