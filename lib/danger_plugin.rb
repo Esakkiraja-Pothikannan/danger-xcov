@@ -80,34 +80,49 @@ module Danger
 
       report.print_description
       # Create markdown
+      puts "::DONE::report.print_description"
       display_only_average_coverage = args.first[:display_only_average_coverage] || false
+      puts "display_only_average_coverage: #{display_only_average_coverage}"
       average_coverage_target_title = args.first[:average_coverage_target_title] || ""
+      puts "average_coverage_target_title: #{average_coverage_target_title}"
       if display_only_average_coverage && average_coverage_target_title.count > 0
+        puts "INSIDE IF CONDITAION"
         report_markdown = "Current coverage for RCS is 0.00%"  #"Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
       else
+        puts "INSIDE ELSE CONDITAION"
         report_markdown = report.markdown_value
       end
 
       # Send markdown
+      puts "report_markdown added"
       markdown(report_markdown)
 
+      puts "Notify failure if minimum coverage hasn't been reached"
       # Notify failure if minimum coverage hasn't been reached
       threshold = Xcov.config[:minimum_coverage_percentage].to_i
+      puts "Notify threshold: #{threshold}"
       if !threshold.nil? && (report.coverage * 100) < threshold
+        puts "Notify threshold: (report.coverage * 100) < threshold"
         fail("Code coverage under minimum of #{threshold}%")
       end
 
+      puts "Notify failure if minimum coverage hasn't been reached for modified/added files"
       # Notify failure if minimum coverage hasn't been reached for modified/added files
       file_threshold = args.first[:minimum_coverage_percentage_for_changed_files].to_i || 0
+      puts "Notify file_threshold: #{file_threshold}"
       ignore_list = args.first[:ignore_list_of_minimum_coverage_percentage_for_changed_files] || []
+      puts "Notify ignore_list: #{ignore_list}"
 
       if file_threshold > 0
+        puts "file_threshold IF CONDITIONS: file_threshold > 0"
         report.targets.each do |target|
           target_files = target.files.select { |file| ignore_list.none? { |contains| file.name.include? contains } }
           violations = target_files.select { |file| (file.coverage * 100) < file_threshold }
           fail("Class code coverage is below minimum, please improve #{violations.map {|f| f.name }} to at least #{file_threshold}%.") if !violations.empty?
         end
+        puts "END---1"
       end
+      puts "END---2"
     end
 
     # Aux methods
