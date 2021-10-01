@@ -87,14 +87,14 @@ module Danger
       puts "average_coverage_target_title: #{average_coverage_target_title}"
       if display_only_average_coverage && average_coverage_target_title.length > 0
         puts "INSIDE IF CONDITAION"
-        report_markdown = "Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
+        report_markdown = average_coverage_markdown_value(report.targets, average_coverage_target_title, report.displayable_coverage)
       else
         puts "INSIDE ELSE CONDITAION"
         report_markdown = report.markdown_value
       end
 
       # Send markdown
-      puts "report_markdown added"
+      puts "report_markdown added:: #{report_markdown}"
       markdown(report_markdown)
 
       puts "Notify failure if minimum coverage hasn't been reached"
@@ -150,6 +150,29 @@ module Danger
       converted_options.delete(:minimum_coverage_percentage_for_changed_files)
       converted_options.delete(:ignore_list_of_minimum_coverage_percentage_for_changed_files)
       converted_options
+    end
+
+    def average_coverage_markdown_value(targets, name, displayable_coverage)
+      puts"average_coverage_markdown_value::: #{name} -- #{displayable_coverage}"
+      markdown = "## Current coverage for #{name} is `#{displayable_coverage}`\n"
+      puts"average_coverage_markdown_value::: markdown -- #{markdown}"
+      markdown << "#{targets.map { |target| each_target_changed_files_markdown_value(target.files) }.join("")}\n> Powered by [xcov](https://github.com/nakiostudio/xcov)"
+      puts"average_coverage_markdown_value::: markdown111 -- #{markdown}"
+      
+      markdown
+    end
+
+    def each_target_changed_files_markdown_value(files)
+      puts "each_target_changed_files_markdown_value"
+      markdown = ""
+      return markdown << "✅ *No files affecting coverage found*\n\n---\n" if files.empty?
+      puts "each_target_changed_files_markdown_value -- 1111"
+      markdown << "Files changed | - | - \n--- | --- | ---\n"
+      puts "each_target_changed_files_markdown_value:: FILES CHANGED:: #{markdown}"
+      markdown << "#{files.map { |file| file.markdown_value }.join("")}\n---\n"
+      puts "each_target_changed_files_markdown_value:: FILES.MAP:: #{markdown}"
+
+      markdown
     end
 
     private :xcov_available?, :process_report
