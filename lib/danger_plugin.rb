@@ -78,11 +78,12 @@ module Danger
     # Outputs a processed report with Danger
     def output_report(report, *args)
 
+      report.print_description
       # Create markdown
       display_only_average_coverage = args.first[:display_only_average_coverage] || false
       average_coverage_target_title = args.first[:average_coverage_target_title] || ""
       if display_only_average_coverage && average_coverage_target_title.count > 0
-        report_markdown = "Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
+        report_markdown = "Current coverage for RCS is 0.00%"  #"Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
       else
         report_markdown = report.markdown_value
       end
