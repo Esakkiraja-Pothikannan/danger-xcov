@@ -87,7 +87,7 @@ module Danger
       puts "average_coverage_target_title: #{average_coverage_target_title}"
       if display_only_average_coverage && average_coverage_target_title.length > 0
         puts "INSIDE IF CONDITAION"
-        report_markdown = "Current coverage for RCS is 0.00%"  #"Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
+        report_markdown = "Current coverage for #{average_coverage_target_title} is #{(report.coverage * 100)}%"
       else
         puts "INSIDE ELSE CONDITAION"
         report_markdown = report.markdown_value
