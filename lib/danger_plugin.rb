@@ -83,11 +83,11 @@ module Danger
       puts "::DONE::report.print_description"
       display_only_average_coverage = args.first[:display_only_average_coverage] || false
       puts "display_only_average_coverage: #{display_only_average_coverage}"
-      average_coverage_target_title = args.first[:average_coverage_target_title] || ""
-      puts "average_coverage_target_title: #{average_coverage_target_title}"
-      if display_only_average_coverage && average_coverage_target_title.length > 0
+      average_coverage_target_diplay_name = args.first[:average_coverage_target_diplay_name] || ""
+      puts "average_coverage_target_diplay_name: #{average_coverage_target_diplay_name}"
+      if display_only_average_coverage && average_coverage_target_diplay_name.length > 0
         puts "INSIDE IF CONDITAION"
-        report_markdown = average_coverage_markdown_value(report.targets, average_coverage_target_title, report.displayable_coverage)
+        report_markdown = average_coverage_markdown_value(report.targets, average_coverage_target_diplay_name, report.displayable_coverage)
       else
         puts "INSIDE ELSE CONDITAION"
         report_markdown = report.markdown_value
@@ -149,12 +149,19 @@ module Danger
       converted_options.delete(:verbose)
       converted_options.delete(:minimum_coverage_percentage_for_changed_files)
       converted_options.delete(:ignore_list_of_minimum_coverage_percentage_for_changed_files)
+      converted_options.delete(:display_only_average_coverage)
+      converted_options.delete(:average_coverage_target_diplay_name)
       converted_options
     end
 
-    def average_coverage_markdown_value(targets, name, displayable_coverage)
-      puts"average_coverage_markdown_value::: #{name} -- #{displayable_coverage}"
-      markdown = "## Current coverage for #{name} is `#{displayable_coverage}`\n"
+    def average_coverage_markdown_value(targets, target_diplay_name, displayable_coverage)
+      puts"average_coverage_markdown_value::: #{target_diplay_name} -- #{displayable_coverage}"
+      markdown = ""
+      if target_diplay_name.length > 0
+        markdown = "## Current coverage for #{target_diplay_name} is `#{displayable_coverage}`\n"
+      else
+        markdown = "## Current coverage is `#{displayable_coverage}`\n"
+      end
       puts"average_coverage_markdown_value::: markdown -- #{markdown}"
       changed_files_markdown = "#{targets.map { |target| each_target_changed_files_markdown_value(target.files) }.join("")}"
       if changed_files_markdown.length > 0
